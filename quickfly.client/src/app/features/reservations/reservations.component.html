@@ -1,0 +1,111 @@
+<app-add-reservation
+  (onAddReservation)="loadReservations(pageIndex, pageSize)"
+  (onCloseForm)="CloseForm()"
+  [selectedReservation]="selectedReservation"
+  [displayForm]="displayForm"
+></app-add-reservation>
+
+<div>
+  <h2 class="font-semibold text-2xl mb-6 text-center">My reservations</h2>
+  <div class="d-flex justify-content-between">
+    @if(!displayForm) {
+    <button class="button" mat-raised-button (click)="onDisplayForm()">
+      Add Reservation
+    </button>
+    }
+    <input
+      type="text"
+      (input)="applyFilter($event)"
+      placeholder="Search reservation"
+    />
+  </div>
+  <div class="flex flex-col">
+    <div class="w-full">
+      <table
+        mat-table
+        [dataSource]="reservations"
+        (matSortChange)="sortData($event)"
+        matSort
+      >
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Indefikator</th>
+          <td mat-cell *matCellDef="let reservation">{{ reservation.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let reservation">{{ reservation.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
+          <td mat-cell *matCellDef="let reservation">
+            {{ reservation.lastName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fligthNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Flight Number
+          </th>
+          <td mat-cell *matCellDef="let reservation">
+            {{ reservation.fligthNumber }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="departureDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Departure Date
+          </th>
+          <td mat-cell *matCellDef="let reservation">
+            {{ reservation.departureDate }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="landingDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Landing Date
+          </th>
+          <td mat-cell *matCellDef="let reservation">
+            {{ reservation.landingDate }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ticketClass">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Ticket Class
+          </th>
+          <td mat-cell *matCellDef="let reservation">
+            {{ getTicketClassName(reservation.ticketClass) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let reservation">
+            <fa-icon
+              (click)="edit(reservation)"
+              [icon]="['fas', 'pen']"
+            ></fa-icon>
+            <fa-icon
+              (click)="delete(reservation.id)"
+              [icon]="['fas', 'trash']"
+            ></fa-icon>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalSize"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="onPageChange($event)"
+      aria-label="Select page"
+    >
+    </mat-paginator>
+  </div>
+</div>
