@@ -32,7 +32,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
-  ], 
+  ],
 })
 export class ReservationsComponent implements OnInit {
   private reservationService = inject(ReservationService);

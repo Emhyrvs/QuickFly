@@ -25,7 +25,7 @@ namespace QuickFly.Server.Services.Reservations.GetReservations
 
             if (!string.IsNullOrEmpty(query.Filter))
             {
-               reservations = reservations.Where(r =>
+              reservations = reservations.Where(r =>
                     r.Name.Contains(query.Filter, StringComparison.OrdinalIgnoreCase) ||
                     r.LastName.Contains(query.Filter, StringComparison.OrdinalIgnoreCase) ||
                     r.FligthNumber.ToString().Contains(query.Filter) ||

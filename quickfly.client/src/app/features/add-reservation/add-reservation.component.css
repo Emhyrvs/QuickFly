@@ -1,0 +1,9 @@
+.add-form
+{
+width:300px;
+}
+.container
+{
+    display: flex;
+    justify-content: center;
+}
