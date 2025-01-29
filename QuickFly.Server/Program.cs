@@ -25,11 +25,8 @@ builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
-builder.Services.AddEndpointsApiExplorer(); 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "QuickFly Server API", Version = "v1" });
-});
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -40,11 +37,8 @@ app.MapStaticAssets();
 
 if (app.Environment.IsDevelopment())
 {
-    object value = app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "QuickFly Server API v1");
-    });
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.MapCarter();
