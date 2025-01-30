@@ -1,1 +1,29 @@
-[{"Id":"a2dd6a8d-7149-4221-8442-9a040e105726","Name":"Anna","LastName":"Smith","FligthNumber":"QF 4564","DepartureDate":"2025-04-20T08:00:00","LandingDate":"2025-04-20T12:15:00","TicketClass":0},{"Id":"ba5384f8-cd2e-4331-967a-e614c74f0142","Name":"Michael","LastName":"Johnson","FligthNumber":"QF 7849","DepartureDate":"2025-05-10T22:15:00","LandingDate":"2025-05-11T02:30:00","TicketClass":3}]
+[
+  {
+    "Id": "6080c3a3-5fd8-447d-95a2-0c0605d4ca5a",
+    "Name": "John",
+    "LastName": "Doe",
+    "FligthNumber": "QF 1234",
+    "DepartureDate": "2025-03-15T14:30:00",
+    "LandingDate": "2025-03-15T18:45:00",
+    "TicketClass": 2
+  },
+  {
+    "Id": "87e7925a-4eb2-4382-a680-60b5c152b18a",
+    "Name": "Anna",
+    "LastName": "Smith",
+    "FligthNumber": "QF 4564",
+    "DepartureDate": "2025-04-20T08:00:00",
+    "LandingDate": "2025-04-20T12:15:00",
+    "TicketClass": 0
+  },
+  {
+    "Id": "aba7fdcb-6f47-44c8-a0ae-82858ed8a4b0",
+    "Name": "Michael",
+    "LastName": "Johnson",
+    "FligthNumber": "QF 7849",
+    "DepartureDate": "2025-05-10T22:15:00",
+    "LandingDate": "2025-05-11T02:30:00",
+    "TicketClass": 3
+  }
+]
