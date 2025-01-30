@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Add Reservation</h1>
+<h1 mat-dialog-title>{{ data ? 'Modify reservation' : 'Add Reservation' }}</h1>
 <div mat-dialog-content>
   <div class="container">
     <form [formGroup]="form" class="add-form" (ngSubmit)="onSubmit()">
