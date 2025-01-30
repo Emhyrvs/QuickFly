@@ -1,7 +1,4 @@
-.justify-content-between
-{
-display: flex;
-justify-content: space-between;
+.justify-content-between {
+  display: flex;
+  justify-content: space-between;
 }
-
-
