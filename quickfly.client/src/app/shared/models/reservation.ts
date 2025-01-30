@@ -1,9 +1,11 @@
+import { DatetimeAdapter } from '@mat-datetimepicker/core';
+
 export interface Reservation {
-    id: string;
-    name: string;
-    lastName: string;
-    fligthNumber: number;
-    departureDate: string;
-    landingDate: string;
-    ticketClass: number;
-  }
+  id: string;
+  name: string;
+  lastName: string;
+  fligthNumber: string;
+  departureDate: Date;
+  landingDate: Date;
+  ticketClass: number;
+}

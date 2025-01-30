@@ -20,20 +20,19 @@ namespace QuickFly.Server.Services.Reservations.GetReservations
 
         public async Task<GetReservationsResult> Handle(GetReservationsQuery query, CancellationToken cancellationToken)
         {
-
-            var reservations = _jsonFileHelper.ReadFromJsonFile<Reservation>().AsQueryable();
+            var reservations = await Task.Run(() => _jsonFileHelper.ReadFromJsonFile<Reservation>().AsQueryable(), cancellationToken);
 
             if (!string.IsNullOrEmpty(query.Filter))
             {
-              reservations = reservations.Where(r =>
-                    r.Name.Contains(query.Filter, StringComparison.OrdinalIgnoreCase) ||
-                    r.LastName.Contains(query.Filter, StringComparison.OrdinalIgnoreCase) ||
-                    r.FligthNumber.ToString().Contains(query.Filter) ||
-                    r.TicketClass.ToString().Contains(query.Filter, StringComparison.OrdinalIgnoreCase));
+                reservations = reservations.Where(r =>
+                      r.Name.Contains(query.Filter, StringComparison.OrdinalIgnoreCase) ||
+                      r.LastName.Contains(query.Filter, StringComparison.OrdinalIgnoreCase) ||
+                      r.FligthNumber.ToString().Contains(query.Filter) ||
+                      r.DepartureDate.ToString().Contains(query.Filter) ||
+                      r.LandingDate.ToString().Contains(query.Filter) ||
+                      r.TicketClass.ToString().Contains(query.Filter, StringComparison.OrdinalIgnoreCase));
             }
             var reservationList = reservations.AsEnumerable();
-
-
 
             bool ascending = string.IsNullOrEmpty(query.Direction) || query.Direction.Equals("asc", StringComparison.OrdinalIgnoreCase);
             Console.WriteLine(query.Active);
@@ -48,14 +47,13 @@ namespace QuickFly.Server.Services.Reservations.GetReservations
                 _ => reservationList
             };
 
-
             var pagedReservations = reservationList.ToPagedList(query.PageNumber ?? 1, query.PageSize ?? 10);
 
             int totalSize = pagedReservations.TotalItemCount;
 
-
             return new GetReservationsResult(pagedReservations, totalSize);
         }
+
     }
 
 }

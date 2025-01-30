@@ -7,15 +7,16 @@ using Newtonsoft.Json;
 using QuickFly.Server.Shared.JsonHelper;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
-public class JsonFileHelper: IJsonFileHelper
+public class JsonFileHelper : IJsonFileHelper
 {
-    private  readonly string JsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "reservations.json");
+    private readonly string JsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "reservations.json");
 
-    public  List<T> ReadFromJsonFile<T>()
+    public List<T> ReadFromJsonFile<T>()
     {
         using StreamReader file = File.OpenText(JsonFilePath);
         JsonSerializer serializer = new JsonSerializer();
-        return (List<T>)serializer.Deserialize(file, typeof(List<T>));
+        var result = serializer.Deserialize(file, typeof(List<T>));
+        return result as List<T> ?? new List<T>();
     }
 
     public void WriteToJsonFile<T>(List<T> data)
@@ -24,6 +25,4 @@ public class JsonFileHelper: IJsonFileHelper
         JsonSerializer serializer = new JsonSerializer();
         serializer.Serialize(file, data);
     }
-
-   
 }

@@ -16,21 +16,18 @@ public class DeleteReservationCommandValidator : AbstractValidator<DeleteReserva
         RuleFor(x => x.Id).NotEmpty().WithMessage("Reservation ID is required");
     }
 }
-internal class DeleteReservationCommandHandler
-    
-     : ICommandHandler<DeleteReservationCommand, DeleteReservationResult>
-    {
-    
-   
+internal class DeleteReservationCommandHandler : ICommandHandler<DeleteReservationCommand, DeleteReservationResult>
+{
     private readonly IJsonFileHelper _jsonFileHelper;
 
     public DeleteReservationCommandHandler(IJsonFileHelper jsonFileHelper)
     {
         _jsonFileHelper = jsonFileHelper;
     }
+
     public async Task<DeleteReservationResult> Handle(DeleteReservationCommand command, CancellationToken cancellationToken)
     {
-        var reservations = _jsonFileHelper.ReadFromJsonFile<Reservation>().ToList();
+        var reservations = await Task.Run(() => _jsonFileHelper.ReadFromJsonFile<Reservation>().ToList());
         var reservation = reservations.FirstOrDefault(p => p.Id == command.Id);
 
         if (reservation is null)
@@ -39,9 +36,10 @@ internal class DeleteReservationCommandHandler
         }
 
         reservations.Remove(reservation);
-        _jsonFileHelper.WriteToJsonFile<Reservation>(reservations);
+        await Task.Run(() => _jsonFileHelper.WriteToJsonFile<Reservation>(reservations));
 
         return new DeleteReservationResult(true);
-        }
     }
+}
+
 

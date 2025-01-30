@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins("http://localhost:52543", "http://localhost:5000", "https://your-swagger-url.com", "https://127.0.0.1:52543")
+            builder.AllowAnyOrigin()
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });
@@ -35,6 +35,8 @@ app.MapDefaultEndpoints();
 app.UseDefaultFiles();
 app.MapStaticAssets();
 
+
+Initialize.Run();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -19,8 +19,7 @@ internal class GetReservationByIdQueryHandler
     }
     public async Task<GetReservationByIdResult> Handle(GetReservationByIdQuery query, CancellationToken cancellationToken)
     {
-        var reservations = _jsonFileHelper.ReadFromJsonFile<Reservation>();
-
+        var reservations = await Task.Run(() => _jsonFileHelper.ReadFromJsonFile<Reservation>(), cancellationToken);
 
         var reservation = reservations.FirstOrDefault(a => a.Id == query.Id);
 
@@ -30,6 +29,6 @@ internal class GetReservationByIdQueryHandler
         }
 
         return new GetReservationByIdResult(reservation);
-
     }
+
 }

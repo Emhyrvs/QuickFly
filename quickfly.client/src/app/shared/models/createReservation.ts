@@ -1,9 +1,8 @@
 export interface CreateReservation {
-  
-    name: string;
-    lastName: string;
-    fligthNumber: number;
-    departureDate: string;
-    landingDate: string;
-    ticketClass: number;
-  }
+  name: string;
+  lastName: string;
+  fligthNumber: string;
+  departureDate: Date;
+  landingDate: Date;
+  ticketClass: number;
+}

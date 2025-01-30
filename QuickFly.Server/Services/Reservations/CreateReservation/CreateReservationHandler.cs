@@ -11,7 +11,7 @@ namespace QuickFly.Server.Services.Reservations.CreateReservation;
 public record CreateReservationCommand(
     string Name,
     string LastName,
-    int FligthNumber,
+    string FligthNumber,
     DateTime DepartureDate,
     DateTime LandingDate,
     int TicketClass
@@ -25,11 +25,10 @@ public class CreateReservationCommandHandler : ICommandHandler<CreateReservation
     {
         _jsonFileHelper = jsonFileHelper;
     }
+
     public async Task<CreateReservationResult> Handle(CreateReservationCommand command, CancellationToken cancellationToken)
     {
-        var reservations = _jsonFileHelper.ReadFromJsonFile<Reservation>().ToList();
-
-        
+        var reservations = await Task.Run(() => _jsonFileHelper.ReadFromJsonFile<Reservation>().ToList(), cancellationToken);
 
         var reservation = new Reservation
         {
@@ -47,7 +46,7 @@ public class CreateReservationCommandHandler : ICommandHandler<CreateReservation
             reservations = new List<Reservation>();
         }
         reservations.Add(reservation);
-       _jsonFileHelper.WriteToJsonFile(reservations);
+        await Task.Run(() => _jsonFileHelper.WriteToJsonFile(reservations), cancellationToken);
 
         return new CreateReservationResult(reservation.Id);
     }

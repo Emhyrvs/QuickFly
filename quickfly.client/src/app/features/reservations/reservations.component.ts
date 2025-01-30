@@ -17,21 +17,30 @@ import { TicketClass } from '../../shared/ticketClass';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatNativeDatetimeModule } from '@mat-datetimepicker/core';
+import { ToastrService } from 'ngx-toastr';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-reservations',
   templateUrl: './reservations.component.html',
   styleUrls: ['./reservations.component.css'],
   standalone: true,
+  providers: [DatePipe],
   imports: [
     FontAwesomeModule,
-    AddReservationComponent,
     MatSortModule,
     MatPaginatorModule,
     MatTableModule,
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
+    MatDialogModule,
+    MatNativeDatetimeModule,
+    MatInputModule,
+    CommonModule,
   ],
 })
 export class ReservationsComponent implements OnInit {
@@ -51,9 +60,15 @@ export class ReservationsComponent implements OnInit {
 
   filterValue: string = '';
 
-  constructor(library: FaIconLibrary) {
+  constructor(
+    public dialog: MatDialog,
+    library: FaIconLibrary,
+    private toastr: ToastrService,
+    private datePipe: DatePipe
+  ) {
     library.addIcons(faTrash, faPen);
   }
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   totalSize = 100;
@@ -65,36 +80,54 @@ export class ReservationsComponent implements OnInit {
     this.pageIndex = event.pageIndex ?? 0;
     this.pageSize = event.pageSize ?? 10;
 
-    this.loadReservations(this.pageIndex, this.pageSize, '');
+    this.loadReservations(this.pageIndex, this.pageSize, this.filterValue);
   }
 
   ngOnInit(): void {
-    this.loadReservations(0, 10, this.filterValue); // Pobranie danych przy starcie (strona 0, 10 elementów na stronę)
+    this.loadReservations(0, 10, this.filterValue);
   }
+
   edit(reservation: Reservation): void {
-    this.displayForm = true;
-    this.selectedReservation = reservation;
+    this.openDialog(reservation);
   }
-  CloseForm() {
-    this.displayForm = false;
+
+  openDialog(reservation?: Reservation): void {
+    this.dialog
+      .open(AddReservationComponent, {
+        data: reservation,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result !== undefined) {
+          if (result === true) {
+            this.loadReservations(
+              this.pageIndex,
+              this.pageSize,
+              this.filterValue
+            );
+          }
+        }
+      });
   }
-  onDisplayForm() {
-    this.displayForm = true;
-  }
+
   delete(id: string): void {
     this.reservationService.deleteReservation(id).subscribe({
-      next: () => this.loadReservations(this.pageIndex, this.pageSize), // Odświeżenie rezerwacji po usunięciu
+      next: () => {
+        this.loadReservations(this.pageIndex, this.pageSize),
+          this.toastr.success('Success', `Reservation deleted`);
+      },
       error: (err) => {
-        console.error('Error deleting reservation:', err);
-        this.reservations = []; // Obsługa błędów
+        this.toastr.error('Error', `Error deleting reservation: ${{ err }} `);
       },
     });
   }
+
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value.toLowerCase();
     this.pageIndex = 0;
     this.loadReservations(this.pageIndex, this.pageSize, this.filterValue);
   }
+
   sortData(sort: Sort) {
     this.loadReservations(
       this.pageIndex,
@@ -104,9 +137,11 @@ export class ReservationsComponent implements OnInit {
       sort.direction
     );
   }
+
   getTicketClassName(ticketClass: number): string {
     return TicketClass[ticketClass];
   }
+
   loadReservations(
     pageIndex: number = 0,
     pageSize: number = 10,

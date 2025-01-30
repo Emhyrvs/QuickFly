@@ -11,7 +11,7 @@ public record UpdateReservationCommand
     (Guid Id,
     string Name,
     string LastName,
-    int FligthNumber,
+    string FligthNumber,
     DateTime DepartureDate,
     DateTime LandingDate,
     int TicketClass)
@@ -36,18 +36,16 @@ internal class UpdateReservationCommandHandler : ICommandHandler<UpdateReservati
     {
         _jsonFileHelper = jsonFileHelper;
     }
+
     public async Task<UpdateReservationResult> Handle(UpdateReservationCommand command, CancellationToken cancellationToken)
     {
-        var reservations = _jsonFileHelper.ReadFromJsonFile<Reservation>().ToList();
+        var reservations = await Task.Run(() => _jsonFileHelper.ReadFromJsonFile<Reservation>().ToList());
         var reservation = reservations.FirstOrDefault(p => p.Id == command.Id);
-
-
 
         if (reservation is null)
         {
             throw new ReservationNotFoundException(command.Id);
         }
-
 
         reservation.Name = command.Name;
         reservation.LastName = command.LastName;
@@ -57,7 +55,7 @@ internal class UpdateReservationCommandHandler : ICommandHandler<UpdateReservati
         reservation.TicketClass = (TicketClass)command.TicketClass;
         reservations.Remove(reservation);
         reservations.Add(reservation);
-        _jsonFileHelper.WriteToJsonFile(reservations);
+        await Task.Run(() => _jsonFileHelper.WriteToJsonFile(reservations));
         return new UpdateReservationResult(true);
     }
 }

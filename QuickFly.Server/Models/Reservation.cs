@@ -9,7 +9,7 @@ namespace QuickFly.Server.Models
 
         public string LastName { get; set; } = default!;
 
-        public int FligthNumber { get; set; }
+        public String FligthNumber { get; set; } = default!;
 
         public DateTime DepartureDate { get; set; }
 

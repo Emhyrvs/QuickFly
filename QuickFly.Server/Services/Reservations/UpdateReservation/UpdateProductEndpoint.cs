@@ -8,7 +8,7 @@ public record UpdateReservationRequest(
     Guid Id,
     string Name,
     string LastName,
-    int FligthNumber,
+    string FligthNumber,
     DateTime DepartureDate,
     DateTime LandingDate,
     int TicketClass);
